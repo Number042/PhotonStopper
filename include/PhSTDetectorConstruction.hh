@@ -47,7 +47,7 @@ class PhSTDetectorMessenger;
 class PhSTDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-	PhSTDetectorConstruction(G4double TargetThickness_input = 1.0);
+	PhSTDetectorConstruction(G4double TargetThickness_input = 1.0, G4String TargetMaterial_input = "G4_Al");
 	~PhSTDetectorConstruction() {};
 
 public:
