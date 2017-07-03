@@ -51,32 +51,31 @@
 #include "G4SystemOfUnits.hh"
 #include "G4RunManager.hh"
 
-PhSTDetectorConstruction::PhSTDetectorConstruction(G4double TargetThickness_input) :
+PhSTDetectorConstruction::PhSTDetectorConstruction(G4double TargetThickness_input, G4String TargetMaterial_input) :
  LogTarget(NULL), TargetMaterial(NULL), TargetThickness(NULL),
  LogTracker(NULL), TrackerMaterial(NULL)
 {
     // WORLD - box of equal dimensions
-	worldLength = 10*cm;    // box of 10 cm size
+	worldLength = 20*cm;    // box of 10 cm size
 
 	// TARGET - block with thickness, height and breadth
     TargetThickness = TargetThickness_input*cm;
-    targetHeight = 10*cm;
-    targetBreadth = 10*cm;
+    targetHeight = worldLength;
+    targetBreadth = worldLength;
 
     // DETECTOR - box after block
-	detHeight = 10*cm;
-	detBreadth = 10*cm;
+	detHeight = worldLength;
+	detBreadth = worldLength;
 	detThickness = 5*mm;
 
 	// Distance target-detector
-	detDist = 2*cm;
+	detDist = 1*cm;
 
 	// Materials
 	//
 	DefineMaterials();
-	SetTargetMaterial("G4_Al");
+	TargetMaterial = G4Material::GetMaterial(TargetMaterial_input);
 	TrackerMaterial = vacuumMaterial;
-
 
 	//fMessenger = new PhSTDetectorMessenger(this);
 }
@@ -131,11 +130,11 @@ G4VPhysicalVolume* PhSTDetectorConstruction::Construct()
 						  	  	 true);					// checking overlaps
 
 	G4cout << " =========== TARGET MESSENGER ============================ " << G4endl;
-	G4cout << "Target is made of" << TargetMaterial->GetName() << G4endl;
+	G4cout << "		Target is made of " << TargetMaterial->GetName() 		<< G4endl;
 	G4cout << " ========================================================= " << G4endl;
 
 
-	// 3rd: detector volume and placement
+	// 3rd: tracker (detector) volume and placement
 	//
     // SOLID
 	tracker = new G4Box("tracker", detBreadth, detHeight, detThickness);  // name and size (X,Y,Z) (dimensions same as target, except length)
@@ -144,18 +143,18 @@ G4VPhysicalVolume* PhSTDetectorConstruction::Construct()
 									 TrackerMaterial,	// material
 									 "Tracker");		// its name
 	// PHYSICAL (placement)
-	trackerPV = new G4PVPlacement(0,							// no rotation
-						  	  	  G4ThreeVector(0, 0, detDist),	// position (x,y,z) !! placement relative to variable target width !!
-							  	  LogTracker,					// its logical volume
-								  "Tracker",					// its name
-								  LogWorld,						// its mother
-								  false,						// no bools
-								  0,							// copy number
-								  true);						// checking overlaps
+	trackerPV = new G4PVPlacement(0,												// no rotation
+						  	  	  G4ThreeVector(0, 0, TargetThickness + detDist),	// position (x,y,z) !! placement relative to variable target width !!
+							  	  LogTracker,										// its logical volume
+								  "Tracker",										// its name
+								  LogWorld,											// its mother
+								  false,											// no bools
+								  0,												// copy number
+								  true);											// checking overlaps
 
 
 	G4cout << " =========== DETECTOR MESSENGER ============================ " << G4endl;
-	G4cout << "The detector is made of " << TrackerMaterial->GetName()       << G4endl;
+	G4cout << "		The detector is made of " << TrackerMaterial->GetName()   << G4endl;
 	G4cout << " =========================================================== " << G4endl;
 
 	// Pointer to detector manager
