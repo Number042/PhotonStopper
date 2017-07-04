@@ -38,29 +38,34 @@ int main(int argc, char** argv)
 	//
 	int getopt_char;
 	double target_thickness = 1.0;
-
+	G4String target_mat = "G4_Al";
 	G4String physListName = "PhSTPhysicsList";
 	G4int numbEvents = 0;
+	G4double phot_energy = 100.0;
 	G4bool useGUI = true;
 
-	while((getopt_char = getopt(argc, argv, "t:p:n:hb")) != -1) {
+	while((getopt_char = getopt(argc, argv, "m:t:p:n:e:hb")) != -1) {
 		switch(getopt_char) {
 		// HELP
 		case 'h':
 			G4cout << "This is the PhtonStopper Program - Welcome!" << G4endl
 				<< G4endl
 				<< "Possible options for this program:" << G4endl
-				<< "-t <double> : Target thickness [mm], accepts exponential notation. Default/current value = " << target_thickness << G4endl
-				<< "-p <string> : Physics list name, default/current = '" << physListName << G4endl
-				<< "-n <int> : Enter number of events" << G4endl
+				<< "-t <double> : Target thickness [mm], accepts exponential notation. Default/current value = " << target_thickness << " cm" << G4endl
+				<< "-m <string> : Material, default/current = '" << target_mat << "'" << G4endl
+				<< "-p <string> : Physics list name, default/current = '" << physListName << "'" << G4endl
+				<< "-n <int> : Enter number of events. Default/current = '" << numbEvents << "'" << G4endl
+				<< "-e <double> : initial photon energy [keV], default/current = '" << phot_energy << "'" << G4endl
 				<< "-b : Do not use a GUI" << G4endl << G4endl;
-			G4cout << "Using both, -g and -n options, events are ran before initialization of the GUI." << G4endl;
+			G4cout << "Not using -b but the -n option, events are ran before initialization of the GUI." << G4endl;
 			exit(1);
 			break;
+
 		// BATCH MODE
 		case 'b':
 			useGUI = false;
 			break;
+
 		// TARGET THICKNESS
 		case 't':
 			try {
@@ -73,6 +78,20 @@ int main(int argc, char** argv)
 			exit(1);
 			}
 			break;
+
+		// TARGET MATERIAL
+		case 'm':
+			try {
+				target_mat = G4String(optarg);
+			}
+			catch(const std::invalid_argument& ia) {
+				G4cout 	<< "Reading target material - INVALID ARGUMENT!" << G4endl
+						<< "Passed: " << optarg << "'" << G4endl
+						<< "Expected: string!" << G4endl;
+			exit(1);
+			}
+			break;
+
 		// NUMBER OF EVENTS
 		case 'n':
 			try {
@@ -85,6 +104,21 @@ int main(int argc, char** argv)
 			exit(1);
 			}
 			break;
+
+		// PHOTON ENERGY
+		case 'e':
+			try{
+				phot_energy = std::stoi(string(optarg));
+			}
+			catch(const std::invalid_argument& ia) {
+				G4cout 	<< "Reading event number - INVALID ARGUMENT!" << G4endl
+						<< "Passed: " << optarg << "'" << G4endl
+						<< "Expected: integer!" << G4endl;
+			exit(1);
+			}
+			break;
+
+
 		// PHYSICS LIST
 		case 'p':
 			physListName = G4String(optarg);
@@ -105,10 +139,13 @@ int main(int argc, char** argv)
 
 	// Print arguments (passed from user and/or defaults)
 	//
-	G4cout << "These command line arguments were passed to the program: " << G4endl
+	G4cout << "These command line arguments were passed to the program: " << G4endl;
+	G4cout << " ------------------------------------------------------- " << G4endl
 		<< "target_thickness = " << target_thickness << " [mm]"	<< G4endl
+		<< "target material = " << target_mat 					<< G4endl
 		<< "physListName = '" << physListName << "'" 			<< G4endl
 		<< "numbEvents = " << numbEvents 						<< G4endl
+		<< "photon energy = " << phot_energy 					<< G4endl
 		<< "useGUI = " << (useGUI == true ? "yes" : "no") 			<< G4endl;
 	G4cout << "Arguments passed on to Geant4: " 					<< G4endl;
 	for(int i = 0; i < argc_effective; i ++) {
@@ -123,14 +160,14 @@ int main(int argc, char** argv)
 
 	// Mandatory initialization classes
 	//
-	PhSTDetectorConstruction* detector = new PhSTDetectorConstruction(target_thickness);
+	PhSTDetectorConstruction* detector = new PhSTDetectorConstruction(target_thickness, target_mat);
 	runMan->SetUserInitialization(detector);
 	PhSTPhysicsList* physlist = new PhSTPhysicsList;
 	runMan->SetUserInitialization(physlist);
 
 	// User action classes
 	//
-	PhSTPrimaryGeneratorAction* gen_Act = new PhSTPrimaryGeneratorAction(detector);
+	PhSTPrimaryGeneratorAction* gen_Act = new PhSTPrimaryGeneratorAction(detector, phot_energy);
 	runMan->SetUserAction(gen_Act);
 	PhSTRunAction* run_Act = new PhSTRunAction;
 	runMan->SetUserAction(run_Act);

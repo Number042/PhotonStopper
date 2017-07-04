@@ -41,10 +41,11 @@
 
 #include "Randomize.hh"
 
-PhSTPrimaryGeneratorAction::PhSTPrimaryGeneratorAction(PhSTDetectorConstruction* DC) : Detector(DC)
+PhSTPrimaryGeneratorAction::PhSTPrimaryGeneratorAction(PhSTDetectorConstruction* DC, G4double energy_in) : Detector(DC)
 {
 	G4String particleName = "gamma";
 	G4int numbOfParticles = 1;
+	this->energy_in = energy_in;						// this points to current object to let the program know where to take the (copy of?) variable from from
 	fParticleGun = new G4ParticleGun(numbOfParticles);
 
 	// default photon with 100 keV
@@ -64,8 +65,12 @@ void PhSTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	// Set energy, position and momentum
 	// particle kinematics: definition, default momentum direction and energy
 	//
-	fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -5*cm));
-	fParticleGun->SetParticleEnergy(100.0*keV);
+
+	G4cout << " ============================================" << G4endl;
+	G4cout << "The energy is set to: " << energy_in << " keV" << G4endl;
+
+	fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -20*cm));
+	fParticleGun->SetParticleEnergy(energy_in*keV);
 	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
 	fParticleGun->GeneratePrimaryVertex(anEvent);
 }

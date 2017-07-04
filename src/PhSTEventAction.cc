@@ -30,10 +30,9 @@
 //
 
 #include "PhSTEventAction.hh"
-#include "PhSTRunAction.hh"
-#include "PhSTAnalysis.hh"
-
 #include "G4DigiManager.hh"
+#include "PhSTAnalysis.hh"
+#include "PhSTRunAction.hh"
 #include "G4Event.hh"
 #include "G4EventManager.hh"
 #include "G4HCofThisEvent.hh"
@@ -55,6 +54,10 @@ PhSTEventAction::PhSTEventAction(PhSTRunAction* run) : runAct(run) {}
 void PhSTEventAction::EndOfEventAction(const G4Event* event)
 {
 	PhSTAnalysis::GetInstance()->writePerEvent(event);
+
+	G4cout << " ================================== " 	<< G4endl;
+	G4cout << " Event " << event << " written."			<< G4endl;
+	G4cout << " ================================== " 	<< G4endl;
 	G4int eventID = event->GetEventID();
 	if(eventID % 10000 == 0) {
 		G4cout << "Event # " << event->GetEventID() << G4endl;

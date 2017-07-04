@@ -6,13 +6,15 @@
  */
 
 #include "PhSTAnalysis.hh"
-#include "PhSTTrackerHit.hh"
-#include "PhSTDetectorConstruction.hh"
 #include "PhSTEdepHit.hh"
+#include "PhSTTrackerHit.hh"
 
-#include "G4RunManager.hh"
 #include "G4SDManager.hh"
 #include "G4Track.hh"
+
+#include "G4RunManager.hh"
+#include "PhSTDetectorConstruction.hh"
+
 #include "G4SystemOfUnits.hh"
 
 #include <iostream>
@@ -41,13 +43,16 @@ void PhSTAnalysis::makeHistos()
 	targetEdep = new TH1D("targetEdep", "targetEdep", 1000, 0, 6);
 	targetEdep->GetXaxis()->SetTitle("Total energy deposit/event [MeV]");
 
-	// NUMBER AND ENERGY -- photon specific PDG photon: 22
+	// NUMBER AND ENERGY -- photon specific (PDG photon: 22)
 	//
 	tracker_numPhot = new TH1D("numPhot", "numPhot", 100, -0.5, 100.5);
 	tracker_numPhot->GetXaxis()->SetTitle("Number of photons passing the target");
 
 	tracker_energPhot = new TH1D("energPhot", "energPhot", 1000, 0, 10.0);
 	tracker_energPhot->GetXaxis()->SetTitle("Energy of photons passing the target");
+
+	tracker_energy = new TH1D("energy", "energy", 10000, 0, 10.0);
+	tracker_energy->GetXaxis()->SetTitle("Energy of outgoing particles [MeV]");
 
 	numPhot_total = 0;
 }
@@ -98,8 +103,8 @@ void PhSTAnalysis::writePerEvent(const G4Event* event)
 			for(G4int i = 0; i < nEntries; i++) {
 				const G4double 	energy 	= (*trackerHitsCollection)[i]->GetTrackEnergy();
 				const G4int 	PDG 	= (*trackerHitsCollection)[i]->GetPDG();
-				const G4int		charge 	= (*trackerHitsCollection)[i]->GetCharge();
-				const G4String& type	= (*trackerHitsCollection)[i]->GetType();
+				//const G4int		charge 	= (*trackerHitsCollection)[i]->GetCharge();
+				//const G4String& type	= (*trackerHitsCollection)[i]->GetType();
 
 				// Overall histograms
 				//

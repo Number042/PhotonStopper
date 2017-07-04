@@ -57,6 +57,4 @@ inline void PhSTEdepHit::operator delete(void* aHit)
 	PhSTEdepHitAllocator.FreeSingle((PhSTEdepHit*) aHit);
 }
 
-
-
-#endif /* INCLUDE_PHSTEDEPHIT_HH_ */
+#endif

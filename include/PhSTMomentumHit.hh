@@ -5,13 +5,13 @@
  *      Author: mlueckhof
  */
 
-#ifndef PhSTMomentumHit
-#define PhSTMomentumHit
+#ifndef PhSTMomentumHit_HH
+#define PhSTMomentumHit_HH
 
-#include "G4Allocator.hh";
-#include "G4THitsCollection.hh";
-#include "G4VHit.hh";
-#include "G4ThreeVector.hh";
+#include "G4Allocator.hh"
+#include "G4THitsCollection.hh"
+#include "G4VHit.hh"
+#include "G4ThreeVector.hh"
 
 class G4AttDef;
 class G4AttValue;
@@ -47,8 +47,12 @@ extern G4Allocator<PhSTMomentumHit> PhSTMomentumHitAllocator;
 
 inline void* PhSTMomentumHit::operator new(size_t) {
 	void* aHit;
-	aHit = (void)
+	aHit = (void*)PhSTMomentumHitAllocator.MallocSingle();
+	return aHit;
 }
 
+inline void PhSTMomentumHit::operator delete(void* aHit) {
+	PhSTMomentumHitAllocator.FreeSingle((PhSTMomentumHit*) aHit);
+}
 
-#endif /* INCLUDE_PHSTMOMENTUMHIT_HH_ */
+#endif

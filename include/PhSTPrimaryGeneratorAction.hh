@@ -54,15 +54,15 @@ public:
 
 	// Constructor and Destructor
 	//
-	PhSTPrimaryGeneratorAction(PhSTDetectorConstruction*);
-	virtual ~PhSTPrimaryGeneratorAction();
+	PhSTPrimaryGeneratorAction(PhSTDetectorConstruction*, G4double energy_in = 100e+3); // hard-code the default energy
+	virtual ~PhSTPrimaryGeneratorAction(); //virtual
 
 	// methods
 	//
-	void GeneratePrimaries(G4Event*);
+	virtual void GeneratePrimaries(G4Event*);
 
 private:
-
+	G4double energy_in;					// declare the energy as private variable
 	G4ParticleGun* fParticleGun;		// pointer a to G4 class
 	PhSTDetectorConstruction* Detector;	// pointer to the geometry
 
