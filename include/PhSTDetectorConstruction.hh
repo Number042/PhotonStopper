@@ -32,9 +32,13 @@
 #ifndef PhSTDetetectorConstruction_h
 #define PhSTDetetectorConstruction_h 1
 
-#include "globals.hh"						//
-#include "G4VUserDetectorConstruction.hh"	// global toolkit header
-#include "tls.hh"							//
+#include "G4VUserDetectorConstruction.hh"
+#include "G4Tubs.hh"
+#include "G4Box.hh"
+#include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4Material.hh"
+#include "G4UniformMagField.hh"
 
 class G4Box;
 class G4VPhysicalVolume;
@@ -60,6 +64,7 @@ public:
 
 	inline G4double GetDetectorDistance()	{ return detDist; };
 	inline G4double GetTargetThickness()	{ return TargetThickness; };
+	inline G4String GetTargetMaterial()		{ return TargetMaterial->GetName(); };
 
 private:
 
@@ -73,21 +78,21 @@ private:
 	G4Material* TiMaterial;
 	G4Material* StainlessSteel;
 
-	G4Material* TargetMaterial;
-	G4Material* TrackerMaterial;
-
-
 	// DIMENSIONS
 	//
 	G4double worldLength;
 
-    G4double TargetThickness;
     G4double targetHeight;
     G4double targetBreadth;
+    G4double TargetThickness;
+
+	G4Material* TargetMaterial;
 
 	G4double detHeight;
 	G4double detBreadth;
 	G4double detThickness;
+
+	G4Material* TrackerMaterial;
 
 	G4double detDist;
 

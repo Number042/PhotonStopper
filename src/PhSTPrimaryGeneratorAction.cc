@@ -66,9 +66,6 @@ void PhSTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	// particle kinematics: definition, default momentum direction and energy
 	//
 
-	G4cout << " ============================================" << G4endl;
-	G4cout << "The energy is set to: " << energy_in << " keV" << G4endl;
-
 	fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -20*cm));
 	fParticleGun->SetParticleEnergy(energy_in*keV);
 	fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));

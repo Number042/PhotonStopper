@@ -31,7 +31,7 @@ void PhSTAnalysis::makeHistos()
 
 	// set root files in dedicated subdir 'plots/'
 	//
-	G4String rootFileName = "plots/histo_" + std::to_string(detCon->GetTargetThickness()/mm) + "mm_" + physListName + ".root";
+	G4String rootFileName = "plots/histo_" + detCon->GetTargetMaterial() + "_" + std::to_string(detCon->GetTargetThickness()/mm) + "mm_" + physListName + ".root";
 	G4cout << "Opening ROOT file '" << rootFileName << "'" << G4endl;
 	histFile = new TFile(rootFileName, "RECREATE");
 
@@ -40,7 +40,7 @@ void PhSTAnalysis::makeHistos()
 
 	// ENERGY DEPOSIT -- overall
 	//
-	targetEdep = new TH1D("targetEdep", "targetEdep", 1000, 0, 6);
+	targetEdep = new TH1D("targetEdep", "targetEdep", 1000, 0, 0.5);
 	targetEdep->GetXaxis()->SetTitle("Total energy deposit/event [MeV]");
 
 	// NUMBER AND ENERGY -- photon specific (PDG photon: 22)
@@ -64,7 +64,9 @@ void PhSTAnalysis::writePerEvent(const G4Event* event)
 
 	// Data from targetSD
 	//
+
 	G4int PhSTTargetEdep_CollID = SDman->GetCollectionID("EdepCollection");
+
 	if(PhSTTargetEdep_CollID >= 0) {
 		PhSTEdepHitsCollection* targetEdepHitsCollection = NULL;
 		targetEdepHitsCollection = (PhSTEdepHitsCollection*) (HCE->GetHC(PhSTTargetEdep_CollID));

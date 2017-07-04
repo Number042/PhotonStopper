@@ -29,6 +29,7 @@
 /// \brief Implementation of the PhSTDetectorConstruction class
 #include "PhSTDetectorConstruction.hh"
 #include "PhSTTrackerSD.hh"
+#include "PhSTTargetSD.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
@@ -163,6 +164,9 @@ G4VPhysicalVolume* PhSTDetectorConstruction::Construct()
 
 	// Set tracker as SD
 	//
+	G4VSensitiveDetector* targetSD = new PhSTTargetSD("TargetSD_target");
+	SDman->AddNewDetector(targetSD);
+	LogTarget->SetSensitiveDetector(targetSD);
 	G4VSensitiveDetector* detectorSD = new PhSTTrackerSD("TrackerSD_tracker");
 	SDman->AddNewDetector(detectorSD);
 	LogTracker->SetSensitiveDetector(detectorSD);
