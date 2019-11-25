@@ -1,6 +1,9 @@
 # Git versioning of projects. Specify all files and directories to be ignored.
 #
 !/.gitignore
+/.*
 
 !source/*
+# source/*.in
+!README.md
 /build/*
