@@ -1,0 +1,12 @@
+# Macro file for Photon Stopper test
+
+/tracking/verbose 1
+
+/run/initialize
+
+# 10 gammas 1 MeV
+/gun/energy 1 MeV
+/gun/particle gamma
+/run/beamOn 10
+
+exit
