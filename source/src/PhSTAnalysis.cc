@@ -31,7 +31,7 @@ void PhSTAnalysis::makeHistos()
 
 	// set root files in dedicated subdir 'plots/'
 	//
-	G4String rootFileName = "plots/histo_" + detCon->GetTargetMaterial() + "_" + std::to_string(detCon->GetTargetThickness()/mm) + "mm_" + physListName + ".root";
+	G4String rootFileName = "../plots/histo_" + detCon->GetTargetMaterial() + "_" + std::to_string(detCon->GetTargetThickness()/mm) + "mm_" + physListName + ".root";
 	G4cout << "Opening ROOT file '" << rootFileName << "'" << G4endl;
 	histFile = new TFile(rootFileName, "RECREATE");
 
